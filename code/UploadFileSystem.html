@@ -1,0 +1,296 @@
+<?php
+// Initialize the session
+
+session_start();
+
+
+
+// If session variable is not set it will redirect to login page
+
+if (!isset($_SESSION['username']) || empty($_SESSION['username'])) {
+
+header("location: Login.php");
+
+exit;
+}
+?>
+
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <meta charset="UTF-8">
+
+        <title>Ambulance Arrival Timing</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
+
+        <style type="text/css">
+            p{ padding-left: 5mm; }
+
+            body{ font: 14px sans-serif; }
+
+            .wrapper{ width: 650px; padding: 20px; }
+            
+            .test {height:200px; width:600px}
+
+        </style>
+
+    </head>
+    <body>
+        <div class="wrapper">
+
+            <h1><b><?php echo $_SESSION['username']; ?></b>AMBULANCE ARRIVAL TIMING</h1>
+
+        
+        <form action="Dump_Data.php" method="post" enctype="multipart/form-data">
+            <b>File Upload (.txt files)</b>
+            <br>
+            Select file 
+            <input type="file" name="fileToUpload" id="fileToUpload">
+            <br>
+            <?php
+            if (isset($_POST['form')){
+            $topic = $_POST['form'];
+            }
+            ?>
+            <input style="height:35px;width:140px" type="submit" class="btn btn-primary" value="Upload Text File" name="submit">
+        </form>
+
+        <br>
+
+        <form action="Generate_Report.php" method="post" enctype="multipart/form-data">
+            <b>Generate Report</b>
+            <br>
+            From
+            <select name="dayFrom" id="dayFrom">
+                <option value="01">01</option>
+                <option value="02">02</option>
+                <option value="03">03</option>
+                <option value="04">04</option>
+                <option value="05">05</option>
+                <option value="06">06</option>
+                <option value="07">07</option>
+                <option value="08">08</option>
+                <option value="09">09</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+                <option value="31">31</option>
+            </select>
+            <select name="monthFrom" id="monthFrom">
+                <option value="01">JAN</option>
+                <option value="02">FEB</option>
+                <option value="03">MAR</option>
+                <option value="04">APR</option>
+                <option value="05">MAY</option>
+                <option value="06">JUN</option>
+                <option value="07">JUL</option>
+                <option value="08">AUG</option>
+                <option value="09">SEP</option>
+                <option value="10">OCT</option>
+                <option value="11">NOV</option>
+                <option value="12">DEC</option>
+            </select>
+            <select name="yearFrom" id="yearFrom">
+                <option value="17">2017</option>
+                <option value="16">2016</option>
+            </select>
+            <br>
+            To&nbsp;&nbsp;&nbsp;&nbsp;
+            <select name="dayTo" id="dayTo">
+                <option value="01">01</option>
+                <option value="02">02</option>
+                <option value="03">03</option>
+                <option value="04">04</option>
+                <option value="05">05</option>
+                <option value="06">06</option>
+                <option value="07">07</option>
+                <option value="08">08</option>
+                <option value="09">09</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+                <option value="31">31</option>
+            </select>
+            <select name="monthTo" id="monthTo">
+                <option value="01">JAN</option>
+                <option value="02">FEB</option>
+                <option value="03">MAR</option>
+                <option value="04">APR</option>
+                <option value="05">MAY</option>
+                <option value="06">JUN</option>
+                <option value="07">JUL</option>
+                <option value="08">AUG</option>
+                <option value="09">SEP</option>
+                <option value="10">OCT</option>
+                <option value="11">NOV</option>
+                <option value="12">DEC</option>
+            </select>
+            <select name="yearTo" id="yearTo">
+                <option value="17">2017</option>
+                <option value="16">2016</option>
+            </select>
+            <br><br>
+            <input style="height:35px;width:140px" type="submit" class="btn btn-primary" value="Generate Report" name="submit">
+        </form>
+
+        <br>
+
+        <form action="LRModelDriver.php" method="post" enctype="multipart/form-data">
+            <b>Generate Estimated Time of Arrival</b>
+            <br>
+            Select starting address 
+            <select name="address" id="address">
+                <option value="address1">Address 1 > 16-18 Smiths Rd, Templestowe VIC 3106</option>
+                <option value="address2">Address 2 > 21 Antoinette Blvd, Eltham VIC 3095</option>
+                <option value="address3">Address 3 > 50 Hughes Circuit, Bundoora VIC 3083</option>
+                <option value="address4">Address 4 > 170 Mountain View Rd, Briar Hill VIC 3088</option>
+                <option value="address5">Address 5 > 5 Monak Pl, Yallambie VIC 3085</option>
+                <option value="address6">Address 6 > 1 Amberley Way, Lower Plenty VIC 3093</option>
+                <option value="address7">Address 7 > 79 Moreton Cres, Bundoora VIC 3083</option>
+                <option value="address8">Address 8 > 38 Hickford St, Reservoir VIC 3073</option>
+                <option value="address9">Address 9 > 63 Wales St, Thornbury VIC 3071</option>
+                <option value="address10">Address 10 > 10 Sinnott St, Preston VIC 3072</option>
+                <option value="address11">Address 11 > 5 Crestwood Ave, Macleod VIC 3085</option>
+                <option value="address12">Address 12 > 175 Settlement Rd, Thomastown VIC 3074</option>
+                <option value="address13">Address 13 > 13 Mountain Grove, Kew VIC 3101</option>
+                <option value="address14">Address 14 > 17 Hawthorn Grove, Hawthorn VIC 3122</option>
+                <option value="address15">Address 15 > 15 Bastings St, Northcote VIC 3070</option>
+                <option value="address16">Address 16 > 66 Roseneath St, Clifton Hill VIC 3068</option>
+            </select>
+            <br>
+            Select departure time (Default > Current time)
+            <select name="hour" id="hour">
+                <option value="HH">HH</option>
+                <option value="00">00</option>
+                <option value="01">01</option>
+                <option value="02">02</option>
+                <option value="03">03</option>
+                <option value="04">04</option>
+                <option value="05">05</option>
+                <option value="06">06</option>
+                <option value="07">07</option>
+                <option value="08">08</option>
+                <option value="09">09</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+            </select>
+            <select name="minute" id="minute">
+                <option value="MM">MM</option>
+                <option value="00">00</option>
+                <option value="01">01</option>
+                <option value="02">02</option>
+                <option value="03">03</option>
+                <option value="04">04</option>
+                <option value="05">05</option>
+                <option value="06">06</option>
+                <option value="07">07</option>
+                <option value="08">08</option>
+                <option value="09">09</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+                <option value="31">31</option>
+                <option value="32">32</option>
+                <option value="33">33</option>
+                <option value="34">34</option>
+                <option value="35">35</option>
+                <option value="36">36</option>
+                <option value="37">37</option>
+                <option value="38">38</option>
+                <option value="39">39</option>
+                <option value="40">40</option>
+                <option value="41">41</option>
+                <option value="42">42</option>
+                <option value="43">43</option>
+                <option value="44">44</option>
+                <option value="45">45</option>
+                <option value="46">46</option>
+                <option value="47">47</option>
+                <option value="48">48</option>
+                <option value="49">49</option>
+                <option value="50">50</option>
+                <option value="51">51</option>
+                <option value="52">52</option>
+                <option value="53">53</option>
+                <option value="54">54</option>
+                <option value="55">55</option>
+                <option value="56">56</option>
+                <option value="57">57</option>
+                <option value="58">58</option>
+                <option value="59">59</option>
+                <option value="60">60</option>
+            </select>
+            <select name="ampm" id="ampm">
+                <option value="AM">AM</option>
+                <option value="PM">PM</option>
+            </select>
+            <br>
+            <!-- <?php if(int(date("h")) > 11): ?>
+            This will show if the expression is true.
+            <?php endif; ?> -->
+            <input type="checkbox" name="siren" value="on"> Siren/Lights on
+            <br><br>
+            <input style="height:35px;width:140px" type="submit" class="btn btn-primary" value="Generate ETA" name="generate">
+        </form>
+        <br><br><br><br><br>
+        <a style="height:35px;width:200px" href="Logout.php" class="btn btn-danger"><b>Sign Out</b></a>
+        </div>
+    </body>
+</html>
